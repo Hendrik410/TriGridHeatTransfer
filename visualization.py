@@ -36,6 +36,7 @@ class GridHistoryVisualization:
         fig = plt.figure()
     
         self.grid_ax = fig.add_axes([0.1, 0.2, 0.8, 0.7])
+        self.grid_ax.set_aspect('equal', 'datalim')
         self.slider_ax = fig.add_axes([0.1, 0.1, 0.8, 0.03])
         self.slider = Slider(self.slider_ax, "Time", 0, self.temperatures.shape[0] - 1)
         self.slider.on_changed(self.slider_changed)

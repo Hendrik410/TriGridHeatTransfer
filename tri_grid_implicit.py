@@ -7,6 +7,7 @@ Created on 02.08.2017
 import math
 from time import clock
 import numpy as np
+import numpy.linalg as la
 import scipy.spatial as sp
 
 from materials import SiC, Aluminum
@@ -16,7 +17,7 @@ points = np.zeros((400, 2)) # x, y
 
 for x in range(20):
     for y in range(20):
-        points[x * 20 + y] = [x/2, y/2]
+        points[x * 20 + y] = [x/2.0, y/2.0]
 
 
 # generate points somehow
@@ -29,8 +30,8 @@ verts[:, 2:5] = tri.simplices
 verts[:, 5:8] = tri.neighbors
 
 
-time=500000.0           #Gesamtzeit
-d_t= 50.0            #Zeitschritt in sekunden
+time=500.0           #Gesamtzeit
+d_t= .1              #Zeitschritt in sekunden
 inter = int(time/d_t)
 visu_inter = 10
 
@@ -50,7 +51,7 @@ def apply_boundary():
     for n in range(n_verts):
         if points[int(verts[n, 2]), 1] == 0 or points[int(verts[n, 3]), 1] == 0 or points[int(verts[n, 4]), 1] == 0 :#or \
         #points[int(verts[n, 2]), 0] == 9 or points[int(verts[n, 3]), 0] == 9 or points[int(verts[n, 4]), 0] == 9:
-            T[n] = 200
+            T[n] = 1000
         #if points[int(verts[n, 2]), 0] == 0 or points[int(verts[n, 3]), 0] == 0 or points[int(verts[n, 4]), 0] == 0 or \
         if points[int(verts[n, 2]), 1] == 9 or points[int(verts[n, 3]), 1] == 9 or points[int(verts[n, 4]), 1] == 9:
             T[n] = 100
@@ -104,34 +105,42 @@ def neighbor(n, j):
 def constant(n, m):
     return vert_data[n, m, 3]
 
-def heat_flux(n):
-    flux = 0.0
+
+coeff = np.zeros((n_verts, n_verts))
+
+for n in xrange(n_verts):
+    c = 1.0
     
     for j in range(3):
         neigh = int(neighbor(n, j))
         if neigh > -1:
-            flux += constant(n, neigh) * (T[n] - T[neigh])
-    
-    return flux
+            c = c + constant(n, neigh)
+            
+            coeff[n, neigh] = constant(neigh, n)
+        
+    coeff[n, n] = -c
 
 
-results = np.zeros((int(inter/visu_inter), n_verts))
+apply_boundary()
+results = np.zeros((int(inter/visu_inter) + 1, n_verts))
+results[0] = T
+
 print "Begin"
 begin = clock()
 for i in xrange(0,inter):
-    apply_boundary()
-    for n in xrange(n_verts):
-        T_new[n] = T[n] + heat_flux(n)
-         
+    
+    T_new = la.solve(coeff, T)
+    
     T = T_new
-     
+    
     #----Diagramm------------------
     if i % visu_inter == 0 and int(i/visu_inter) < results.shape[0]:
-        results[int(i/visu_inter)] = T
-     
+        results[int(i/visu_inter) + 1] = T
+    
+    apply_boundary()
          
 print "Finished"   
 print "took " + str(clock() - begin) + " sec"
 
-visu = GridHistoryVisualization(points, verts, results)
+visu = GridHistoryVisualization(points, verts, results, tmin=0, tmax=2000)
 visu.show()

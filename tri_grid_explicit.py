@@ -16,7 +16,7 @@ points = np.zeros((400, 2)) # x, y
 
 for x in range(20):
     for y in range(20):
-        points[x * 20 + y] = [x/2, y/2]
+        points[x * 20 + y] = [x/4.0, y/4.0]
 
 
 # generate points somehow
@@ -29,8 +29,8 @@ verts[:, 2:5] = tri.simplices
 verts[:, 5:8] = tri.neighbors
 
 
-time=500000.0           #Gesamtzeit
-d_t= 50.0            #Zeitschritt in sekunden
+time=5000.0           #Gesamtzeit
+d_t= .1            #Zeitschritt in sekunden
 inter = int(time/d_t)
 visu_inter = 10
 
@@ -52,8 +52,8 @@ def apply_boundary():
         #points[int(verts[n, 2]), 0] == 9 or points[int(verts[n, 3]), 0] == 9 or points[int(verts[n, 4]), 0] == 9:
             T[n] = 200
         #if points[int(verts[n, 2]), 0] == 0 or points[int(verts[n, 3]), 0] == 0 or points[int(verts[n, 4]), 0] == 0 or \
-        if points[int(verts[n, 2]), 1] == 9 or points[int(verts[n, 3]), 1] == 9 or points[int(verts[n, 4]), 1] == 9:
-            T[n] = 100
+        if points[int(verts[n, 2]), 1] >= 4 or points[int(verts[n, 3]), 1] >= 4 or points[int(verts[n, 4]), 1] >= 4:
+            T[n] = 1000
 
 vert_data = np.zeros((n_verts, n_verts, 4)) # distance, angle, lambda, coefficient
 
@@ -118,8 +118,8 @@ def heat_flux(n):
 results = np.zeros((int(inter/visu_inter), n_verts))
 print "Begin"
 begin = clock()
+apply_boundary()
 for i in xrange(0,inter):
-    apply_boundary()
     for n in xrange(n_verts):
         T_new[n] = T[n] + heat_flux(n)
          
@@ -133,5 +133,8 @@ for i in xrange(0,inter):
 print "Finished"   
 print "took " + str(clock() - begin) + " sec"
 
-visu = GridHistoryVisualization(points, verts, results)
+print results[0].sum()
+print results[-1].sum()
+
+visu = GridHistoryVisualization(points, verts, results, tmin=100, tmax=1500)
 visu.show()
