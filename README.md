@@ -77,7 +77,7 @@ Temperatur mit 0.0005m Zellgröße in 3D
 ![alt text](results/3D_0.0005.png "Graph")
 
 ## Zukünftige Arbeiten
-Die dreidimensionale Berechnung konvergiert nicht zum Ergebnis, sonder divergiert. Hier muss der Fehler gefunden und behoben werden.
+Die dreidimensionale Berechnung des Druckes konvergiert nicht zum Ergebnis, sonder divergiert. Hier muss der Fehler gefunden und behoben werden.
 
 Desweiteren ist bis jetzt keine Auswertung aus das Betrachten der Graphen möglich. Hier könnte eine Methode implementiert werden, die es erlaubt, die Werte der Lösungsvariable (`phi`) auszuwerten.
 
