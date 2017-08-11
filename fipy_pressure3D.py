@@ -1,3 +1,6 @@
+########ACHTUNG###################
+## Dieser Code ist nicht stabil ##
+
 from fipy import Gmsh3D, FaceVariable, CellVariable, Viewer, DiffusionTerm
 import math
 import numpy as np
@@ -35,13 +38,6 @@ l3 = 31.784 / 1000.0
 alpha = math.radians(25.0)
 # [rad] Winkel der inneren Kante
 beta = math.radians(30.0)
-
-
-# Berechnete Werte ------------------------------------------------------------
-
-Dx = material["k_x"] * fluid["dichte"]
-Dy = material["k_y"] * fluid["dichte"]
-Dz = material["k_y"] * fluid["dichte"]
 
 
 # FiPy init -------------------------------------------------------------------
@@ -86,7 +82,13 @@ mesh = Gmsh3D(geometryTemplate)
 
 phi = CellVariable(name = "Pressure", mesh = mesh, value = P0)
 
+# Berechnete Werte ------------------------------------------------------------
 
+Dx = material["k_x"] * fluid["dichte"]
+Dy = material["k_y"] * fluid["dichte"]
+Dz = material["k_y"] * fluid["dichte"]
+
+# D ist eine Face Variable, da der Koeffizient für jede Flaeche einzelnd berechenet wird
 D = FaceVariable(mesh=mesh, value=((Dx,0,0), 
                                    (0,Dy,0),
                                    (0,0,Dz)))
@@ -117,6 +119,7 @@ for sweep in range(sweeps):
     new_max_diff = np.absolute(phi_old.value - phi.value).max() 
     phi_old = phi.copy()
     
+    # Keoffizientenn neu berechnen
     pressureFaces = phi.arithmeticFaceValue
     D[0,0,:] = material["k_x"] * pressureFaces[:]
     D[1,1,:] = material["k_y"] * pressureFaces[:]

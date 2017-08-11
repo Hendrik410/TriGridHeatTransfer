@@ -4,7 +4,12 @@ from matplotlib.widgets import Slider
 
 
 class GridHistoryVisualization:
-    
+    '''
+    Zeigt einen Temperaturverlauf eines Dreieckgitters.
+    Points ist ein array mit x und y Koordinaten der Punkte.
+    Vertices enthält immer drei Point-IDs die ein Dreieck bilden.
+    Temperatures enthält die temperaturen für jeden Vertex
+    '''
     def __init__(self, points, vertices, temperatures, tmin=None, tmax=None):
         self.points = points
         self.vertices = vertices
@@ -25,7 +30,9 @@ class GridHistoryVisualization:
         self.slider = None
         
         
-        
+    '''
+    Zeigt die Oberfläche an
+    '''
     def show(self):
         fig = plt.figure()
     

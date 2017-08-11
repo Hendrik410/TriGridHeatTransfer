@@ -6,6 +6,7 @@ import scipy.spatial as sp
 from materials import SiC, Aluminum
 from visualization import GridHistoryVisualization
 
+# Punkte werden hier generiert
 points = np.zeros((400, 2)) # x, y
 
 for x in range(20):
@@ -15,9 +16,15 @@ for x in range(20):
 
 # generate points somehow
 
+# Mesh aus Punkten erstellen mit Dalaunay Algo
 tri = sp.Delaunay(points)
 n_verts = tri.simplices.shape[0]
 
+# Dieser Array enthaelt für jede Flaeche
+#  Die x und y Koordinate des Mittelpunktes
+#  Die drei Punkte, aus denen sie besteht
+#  Die drei Nachbarzellen (-1 wenn kein Nachbar)
+#  Die Flaeche in m^2
 verts = np.zeros((n_verts, 9)) # x, y, p1, p2, p3, n1, n2, n3, A
 verts[:, 2:5] = tri.simplices
 verts[:, 5:8] = tri.neighbors
@@ -31,25 +38,27 @@ visu_inter = 10
 material = Aluminum
 
 
-
+# Gibt die Wearmeleitfähigkeit in die Richtung phi an
 def lambda_phi(phi):
     return math.fabs(math.cos(phi)) * material["lambda_x"] + math.fabs(math.sin(phi)) * material["lambda_y"]
 
 
-
+# Enthält die Temperatur fuer jede Flaeche
 T = np.ones((n_verts))*295.0
 T_new = np.zeros((n_verts))
 
+# Wendet die Randbedingung an
 def apply_boundary():
     for n in range(n_verts):
         if points[int(verts[n, 2]), 1] == 0 or points[int(verts[n, 3]), 1] == 0 or points[int(verts[n, 4]), 1] == 0 :#or \
-        #points[int(verts[n, 2]), 0] == 9 or points[int(verts[n, 3]), 0] == 9 or points[int(verts[n, 4]), 0] == 9:
             T[n] = 200
-        #if points[int(verts[n, 2]), 0] == 0 or points[int(verts[n, 3]), 0] == 0 or points[int(verts[n, 4]), 0] == 0 or \
         if points[int(verts[n, 2]), 1] >= 4 or points[int(verts[n, 3]), 1] >= 4 or points[int(verts[n, 4]), 1] >= 4:
             T[n] = 1000
 
+
+# Eine Matrix, die Entfernung, den Winkel, den Waermeleitkoeffizienten und den Koeffizienten fuer die Berechnung fuer jede Flaeche mit jeder anderen Flaeche enthaelt
 vert_data = np.zeros((n_verts, n_verts, 4)) # distance, angle, lambda, coefficient
+
 
 for v1i in range(n_verts):
     p1 = points[int(verts[v1i, 2])]
@@ -82,22 +91,28 @@ for v1i in range(n_verts):
     
         
 
+# Flaeche (m^2) der Flaeche n
 def area(n):
     return verts[n, 8]
 
+# Lambda zwischen n und m
 def lambda_nodes(n, m):
     return vert_data[n, m, 2]
 
+# Entfernung zwischen n und m
 def distance(n, m):
     return vert_data[n, m, 0]
 
+# Gibt den j-ten Nachbar der Flaeche n zurück (0 <= j < 3)
 def neighbor(n, j):
     j = j%3
     return verts[n, 5+j]
 
+# Gibt den Koeffizienten fuer die Berechnung zwischen Flaeche n und m zurueck
 def constant(n, m):
     return vert_data[n, m, 3]
 
+# Berechnet den Waermestrom den die Flaeche n erfaehrt
 def heat_flux(n):
     flux = 0.0
     
@@ -114,6 +129,7 @@ print "Begin"
 begin = clock()
 apply_boundary()
 for i in xrange(0,inter):
+    # Iteriert ueber alle flaechen
     for n in xrange(n_verts):
         T_new[n] = T[n] + heat_flux(n)
          
@@ -127,8 +143,6 @@ for i in xrange(0,inter):
 print "Finished"   
 print "took " + str(clock() - begin) + " sec"
 
-print results[0].sum()
-print results[-1].sum()
-
+# Zeigt ergebnisse
 visu = GridHistoryVisualization(points, verts, results, tmin=100, tmax=1500)
 visu.show()

@@ -40,6 +40,7 @@ Dx = material["lambda_x"] / (material["cp"] * material["dichte"])
 Dy = material["lambda_y"] / (material["cp"] * material["dichte"])
 Dz = material["lambda_y"] / (material["cp"] * material["dichte"])
 
+# D als Urtsunabhängigen Tensor
 D = Variable(value=((Dx,0,0), 
                     (0,Dy,0), 
                     (0,0,Dz)))
@@ -86,7 +87,7 @@ Physical Volume("volume") = {{1}};
 
 mesh = Gmsh3D(geometryTemplate) 
 
-
+# Enthaelt die Temperatur
 phi = CellVariable(name = "Temperature", mesh = mesh, value = T0)
 
 
@@ -104,6 +105,7 @@ viewer = Viewer(vars=phi, datamin=200., datamax=Te*1.01)
 print "Calculation started"
 started = time.clock()
 
+# Loest die Stationaere Waermegleichung
 DiffusionTerm(coeff=D).solve(var=phi)
 
 print "Calculation finished, took {} seconds".format(time.clock() - started)

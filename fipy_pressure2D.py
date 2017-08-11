@@ -82,10 +82,10 @@ mesh = Gmsh2D(geometryTemplate)
 
 phi = CellVariable(name = "Pressure", mesh = mesh, value = P0)
 
-
 Dx = material["k_x"] * fluid["dichte"]
 Dy = material["k_y"] * fluid["dichte"]
 
+# D muss eine Face Variable sein, da der Koeffizient für jede Flaeche unterschiedlich ist
 D = FaceVariable(mesh=mesh, value=((Dx,0), 
                                    (0,Dy)))
 
@@ -108,12 +108,15 @@ max_diff = 10e10
 #while True:
 #for sweep in range(sweeps):
 while max_diff > 10e-3:
+    # sweep berechnen
     print "Doing sweep {} | max_diff: {}".format(sweep, max_diff)
     eq.sweep(var=phi)
     
+    # maximale Differnz zwischen Zellen berechnen
     new_max_diff = np.absolute(phi_old.value - phi.value).max() 
     phi_old = phi.copy()
     
+    # Koeffizienten neu berechnen
     pressureFaces = phi.arithmeticFaceValue
     D[0,0,:] = material["k_x"] * pressureFaces[:]
     D[1,1,:] = material["k_y"] * pressureFaces[:]
@@ -125,23 +128,25 @@ while max_diff > 10e-3:
     max_diff = new_max_diff
     
 
+# Gradienten über das Gitter umrechnen in Massenstroeme
 grad = phi.faceGrad
 
 grad[0,:] = grad[0,:] * -material["k_x"] * fluid["dichte"] / fluid["viscosity"]
 grad[1,:] = grad[1,:] * -material["k_y"] * fluid["dichte"] / fluid["viscosity"]
 
 total_sum = np.sqrt(grad[0,:]**2 + grad[1,:]**2).sum()
-print str(total_sum)
-
 grad = grad * (massflow/total_sum)
 
+
+# Viewer für das mesh zuerst erstellen
 viewer = Matplotlib2DViewer(vars=phi, datamin=Pamb*0.9, datamax=Pres*1.1)
 
+# Pfeile für Massenstrom auf die selbe Flaeche zeichnen
 grad_viewer = MatplotlibVectorViewer(vars=grad, axes=viewer.axes, title="Pressure & Massflow", scale=.1)
 grad_viewer.plot()
 
-
+# Mesh zeichnen und gesamtes Bild abspeichern
 viewer.plot(filename="results/{}_{}_{}.png".format(cellSize, sweep + 1, massflow))
 
-raw_input("Press enter to close ...")
+#raw_input("Press enter to close ...")
 

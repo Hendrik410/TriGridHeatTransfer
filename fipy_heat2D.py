@@ -48,6 +48,7 @@ intervals = int(total_time / dt)
 Dx = material["lambda_x"] / (material["cp"] * material["dichte"])
 Dy = material["lambda_y"] / (material["cp"] * material["dichte"])
 
+# D kann einfache Variable sein, da sie Ortsunabhängig ist
 D = Variable(value=((Dx,0), 
                     (0,Dy)))
 
@@ -106,7 +107,7 @@ equation = TransientTerm() == DiffusionTerm(coeff=D)
 phi.constrain(Ti, where=mesh.physicalFaces["inner"])
 phi.constrain(Te, where=mesh.physicalFaces["outer"])
 
-
+# Viewer mit Limits entsprechend den Werten initialisieren
 viewer = Viewer(vars=phi, datamin=0., datamax=Te*1.1)
 
 
@@ -121,7 +122,7 @@ else:
     for i in range(intervals):
         equation.solve(var=phi, dt=dt)
         if __name__ == '__main__':
-            viewer.plot()
+            viewer.plot() # Interactive plot
          
          
 raw_input("Press enter to close ...")
