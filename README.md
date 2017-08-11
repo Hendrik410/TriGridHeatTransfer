@@ -11,7 +11,7 @@ Alle Dateien die mit dem Prefix "fipy_" beginnen sind Implementierungen auf Basi
 ## Gitter
 In allen Sktipten (bis auf "tri\_grid\_explicit.py") werden die Gitter mit einem Tool namens Gmsh erstellt (Verwendet wurde Version 3.0.4). Gmsh erstellt 2- und 3-Dimensionale Gitter aufgrund von Textbefehlen, die einzelne Geometrien definieren und verknüpfen.
 Zunächst werden die einzelnen Punkte der Geometrie definiert, dann werden diese Punkte mit Lineien verbunden und diese Linien werden dann zu einer Fläche verknüpft.
-In den dreidimensionalen Fällen wird diese Fläche dann noch durch eine Rotation um pi/2 extrudiert, um einen Volumenkörper zu erhalten.
+In den dreidimensionalen Fällen wird diese Fläche dann noch durch eine Rotation um $\frac {\pi}{2} $ extrudiert, um einen Volumenkörper zu erhalten.
 
 Um die Randbedingungen später im Programm festelegen zu können werden in Gmsh physikalische Kanten (oder Flächen) definiert und mit den Namen "inner" und "outer" identifiziert. Im code kann dann mit `mesh.physicalFaces["inner"]` oder `mesh.pyhsicalFaces["outer"]` auf die entsprechenden Flächen zugegriffen werden.
 
@@ -67,3 +67,7 @@ Mayavi wurde über Anaconda in der Version 4.5.0 installiert.
 Die dreidimensionale Berechnung konvergiert nicht zum Ergebnis, sonder divergiert. Hier muss der Fehler gefunden und behoben werden.
 
 Desweiteren ist bis jetzt keine Auswertung aus das Betrachten der Graphen möglich. Hier könnte eine Methode implementiert werden, die es erlaubt, die Werte der Lösungsvariable (`phi`) auszuwerten.
+
+Aus der bisherigen Arbeit könnte ein allgemeines Tool zum Lösen von Differnzialgleichungen in beliebigen Meshes erstellt werden.
+
+Die Zellgröße könnte Variabel gemacht werden, um eine hohe Auflösung nur dort einzusetzten wo man sie braucht, während das testliche Mesh eher grob ist.
