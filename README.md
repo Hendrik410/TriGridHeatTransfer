@@ -65,6 +65,17 @@ Da sich die Matplotlib Fenster immer sofort schließen, werden die Ergebnisse im 
 Mayavi wurde über Anaconda in der Version 4.5.0 installiert.
 
 
+## Ergebnisse
+
+Druck mit 0.003m Zellgröße und 6 Sweeps
+![alt text](results/0.003_6.png "Graph")
+
+Druck mit 0.001m Zellgröße und 7 Sweeps und Massenströmen
+![alt text](results/0.001_7_2.0.png "Graph")
+
+Temperatur mit 0.0005m Zellgröße in 3D
+![alt text](results/3D_0.0005.png "Graph")
+
 ## Zukünftige Arbeiten
 Die dreidimensionale Berechnung konvergiert nicht zum Ergebnis, sonder divergiert. Hier muss der Fehler gefunden und behoben werden.
 
