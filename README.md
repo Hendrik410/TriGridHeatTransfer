@@ -40,3 +40,11 @@ Die sauberste Methode neue Materialien zu verwenden, ist diese in "materials.py"
 
 ## Koeffizienten
 Da die Materialeigenschaften oft von der Richtung abhängig sind, werden sie in der Datei "materials.py" auch dementsprechend definiert. Um FiPy diese richtungsabhängigen Werte mitzuteilen, werden sie nicht als Skalar sondern als Tensor vom 2. Rang übergeben. 
+
+## Berechnungen
+In den Skripten kommen drei Arten von Berechnungen vor: Instationär, Stationär und Stationär mit Sweeps.
+Instationäre Berechnungen kommen nur in der Datei "fipy\_heat2D.py" vor. Hier kann durch die Variable `steady_state` festgelegt werden, ob die Berechnung stationär oder instationär durchgeführt werden soll.
+Die dreidimensionle Berechnung der Temperatur ist aufgrund der fehlenden Möglichkeit der Visualisierung ebenfalls stationär.
+
+Bei den Berechnunegn zum Druck kommt die schwierigkeit hinzu, dass die Dichte des Fluids von dessen Druck abhängikeit. Es ist deshalb möglich, die Berechnungen mit Sweeps durchzuführen. Das bedeutet es werden einzelne Berechnungen stationär durchgeführt, bei denen immer der Druck der vorherigen Berechnung verwendet wird, um die Koeffizienten für den möchsten Durchlauf zu berechnen. Dadurch konvergiert das Ergebnis mit der Zeit zu der tatsächlichen Lösung. Versuche zeigen, dass sich die Ergebnisse nach dem 10 Sweep nicht mehr sichtlich unterscheiden.
+Es kann entweder eine feste Anzahl an Sweeps angegeben werden oder man modifiziert die Bedingung der Iteration derartig, dass sie zur benötigten Konvergenzbedingung passt.
