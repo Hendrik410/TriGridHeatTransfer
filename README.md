@@ -43,8 +43,27 @@ Da die Materialeigenschaften oft von der Richtung abhängig sind, werden sie in d
 
 ## Berechnungen
 In den Skripten kommen drei Arten von Berechnungen vor: Instationär, Stationär und Stationär mit Sweeps.
+
 Instationäre Berechnungen kommen nur in der Datei "fipy\_heat2D.py" vor. Hier kann durch die Variable `steady_state` festgelegt werden, ob die Berechnung stationär oder instationär durchgeführt werden soll.
 Die dreidimensionle Berechnung der Temperatur ist aufgrund der fehlenden Möglichkeit der Visualisierung ebenfalls stationär.
 
-Bei den Berechnunegn zum Druck kommt die schwierigkeit hinzu, dass die Dichte des Fluids von dessen Druck abhängikeit. Es ist deshalb möglich, die Berechnungen mit Sweeps durchzuführen. Das bedeutet es werden einzelne Berechnungen stationär durchgeführt, bei denen immer der Druck der vorherigen Berechnung verwendet wird, um die Koeffizienten für den möchsten Durchlauf zu berechnen. Dadurch konvergiert das Ergebnis mit der Zeit zu der tatsächlichen Lösung. Versuche zeigen, dass sich die Ergebnisse nach dem 10 Sweep nicht mehr sichtlich unterscheiden.
+Bei den Berechnungen zum Druck kommt die schwierigkeit hinzu, dass die Dichte des Fluids von dessen Druck abhängikeit. Es ist deshalb möglich, die Berechnungen mit Sweeps durchzuführen. Das bedeutet es werden einzelne Berechnungen stationär durchgeführt, bei denen immer der Druck der vorherigen Berechnung verwendet wird, um die Koeffizienten für den möchsten Durchlauf zu berechnen. Dadurch konvergiert das Ergebnis mit der Zeit zu der tatsächlichen Lösung. Versuche zeigen, dass sich die Ergebnisse nach dem 10 Sweep nicht mehr sichtlich unterscheiden.
 Es kann entweder eine feste Anzahl an Sweeps angegeben werden oder man modifiziert die Bedingung der Iteration derartig, dass sie zur benötigten Konvergenzbedingung passt.
+
+Im Fall der zweidimensionalen Druckberechnung werden ebenfalls die Massenströme für jede Zelle berechnet, nachdem das Ergebnis konvergiert ist.
+
+## Visualisierung
+FiPy selbst unterstützt mehrere Methoden der Visualisierung. Es bietet Anbindung an Matplotlib, Mayavi und diverse andere, allerdings werden nur diese beiden verwendet.
+Matplotlib ist für die Visualisierung aller zweidimensionalen Daten verantwortlich, während Mayavi die dreidimensionalen Ergebnisse visulaisiert.
+
+Im Fall der zweidimensionalen Druckberechnung werden die berechneten Masseströme noch als Pfeile eingezeichnet.
+
+Da sich die Matplotlib Fenster immer sofort schließen, werden die Ergebnisse im Ordner "results" als PNG abgelegt und können dort im Nachhinein betrachtet werden.
+
+Mayavi wurde über Anaconda in der Version 4.5.0 installiert.
+
+
+## Zukünftige Arbeiten
+Die dreidimensionale Berechnung konvergiert nicht zum Ergebnis, sonder divergiert. Hier muss der Fehler gefunden und behoben werden.
+
+Desweiteren ist bis jetzt keine Auswertung aus das Betrachten der Graphen möglich. Hier könnte eine Methode implementiert werden, die es erlaubt, die Werte der Lösungsvariable (`phi`) auszuwerten.
