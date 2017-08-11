@@ -130,18 +130,3 @@ for sweep in range(sweeps):
 viewer = Viewer(vars=phi, datamin=Pamb*0.9, datamax=Pres*1.1)
 viewer.plot()
 
-#===============================================================================
-# viewer = Viewer(vars=phi, datamin=Pamb*0.9, datamax=Pres*1.1)
-# 
-# print "Calculation started"
-# started = time.clock()
-# 
-# DiffusionTerm(coeff=D).solve(var=phi)
-# 
-# print "Calculation finished, took {} seconds".format(time.clock() - started)
-# 
-# viewer.plot()
-# 
-# raw_input("Press enter to close ...")
-#===============================================================================
-
