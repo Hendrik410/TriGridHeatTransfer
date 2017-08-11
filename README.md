@@ -27,5 +27,16 @@ Sind in Gmsh physikalische Kanten (oder Flächen) definiert, muss auch die Fläche
 
 
 ## Randbedingungen
-
 Allen Flächen mit der Bezeichnung "inner" wird der Druck `Pres` oder die Temperatur `Ti` zugewiesen, während alle Flächen mit der Bezeichnung "outer" eine Randbedingung mit dem Druck `Pamb` oder der Temperatur `Te` zugewiesen werden. Alle übrigen Zellen werden mit dem Druck `P0`oder der Temperatur `T0` initialisiert.
+
+Die derzeitige Implementierung erlaubt nur Dirichlet-Randbedingung.
+
+## Materialeigenschaften
+In der Datei "materials.py" sind mehrere Materialien als Python Dictionary definiert. Das Grundgerüst einer solchen Definietion befindet sich am Anfang der Datei.
+In den Skripts werden diese Materialien importiert und können der Variable `material` und bei Berechnungen für Druck auch noch der Variable `fluid` zugewiesen werden. 
+In den darauffolgenden Berechnungen werden dann die Werte für das Material der Probe oder des Fluids verwendet.
+
+Die sauberste Methode neue Materialien zu verwenden, ist diese in "materials.py" zu definieren und dann aus den Skripts auf diese Definition zu referenzieren.
+
+## Koeffizienten
+Da die Materialeigenschaften oft von der Richtung abhängig sind, werden sie in der Datei "materials.py" auch dementsprechend definiert. Um FiPy diese richtungsabhängigen Werte mitzuteilen, werden sie nicht als Skalar sondern als Tensor vom 2. Rang übergeben. 
