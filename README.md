@@ -11,7 +11,7 @@ Alle Dateien die mit dem Prefix "fipy_" beginnen sind Implementierungen auf Basi
 ## Gitter
 In allen Sktipten (bis auf "tri\_grid\_explicit.py") werden die Gitter mit einem Tool namens Gmsh erstellt (Verwendet wurde Version 3.0.4). Gmsh erstellt 2- und 3-Dimensionale Gitter aufgrund von Textbefehlen, die einzelne Geometrien definieren und verknüpfen.
 Zunächst werden die einzelnen Punkte der Geometrie definiert, dann werden diese Punkte mit Lineien verbunden und diese Linien werden dann zu einer Fläche verknüpft.
-In den dreidimensionalen Fällen wird diese Fläche dann noch durch eine Rotation um $\frac {\pi}{2} $ extrudiert, um einen Volumenkörper zu erhalten.
+In den dreidimensionalen Fällen wird diese Fläche dann noch durch eine Rotation um pi/2 extrudiert, um einen Volumenkörper zu erhalten.
 
 Um die Randbedingungen später im Programm festelegen zu können werden in Gmsh physikalische Kanten (oder Flächen) definiert und mit den Namen "inner" und "outer" identifiziert. Im code kann dann mit `mesh.physicalFaces["inner"]` oder `mesh.pyhsicalFaces["outer"]` auf die entsprechenden Flächen zugegriffen werden.
 
@@ -30,6 +30,8 @@ Sind in Gmsh physikalische Kanten (oder Flächen) definiert, muss auch die Fläche
 Allen Flächen mit der Bezeichnung "inner" wird der Druck `Pres` oder die Temperatur `Ti` zugewiesen, während alle Flächen mit der Bezeichnung "outer" eine Randbedingung mit dem Druck `Pamb` oder der Temperatur `Te` zugewiesen werden. Alle übrigen Zellen werden mit dem Druck `P0`oder der Temperatur `T0` initialisiert.
 
 Die derzeitige Implementierung erlaubt nur Dirichlet-Randbedingung.
+
+Ist für eine Fläche keine Randbedingung gegeben, wird kein Fluss (von Druck, Temperatur o.ä.) über diese Fläche angenommen.
 
 ## Materialeigenschaften
 In der Datei "materials.py" sind mehrere Materialien als Python Dictionary definiert. Das Grundgerüst einer solchen Definietion befindet sich am Anfang der Datei.
@@ -71,3 +73,12 @@ Desweiteren ist bis jetzt keine Auswertung aus das Betrachten der Graphen möglic
 Aus der bisherigen Arbeit könnte ein allgemeines Tool zum Lösen von Differnzialgleichungen in beliebigen Meshes erstellt werden.
 
 Die Zellgröße könnte Variabel gemacht werden, um eine hohe Auflösung nur dort einzusetzten wo man sie braucht, während das testliche Mesh eher grob ist.
+
+## Links
+Unter den folgenden Links lassen sich zusätzliche Informationen zu den entsprechenden Themen finden.
+
+[FiPy Home](https://www.ctcms.nist.gov/fipy/index.html)
+
+[GMSH Home](https://gmsh.info)
+
+[Mayavi Home](http://docs.enthought.com/mayavi/mayavi/)
