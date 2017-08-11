@@ -1,9 +1,3 @@
-'''
-Created on 07.08.2017
-
-@author: muel_hd
-'''
-
 from fipy import Gmsh3D, Variable, CellVariable, Viewer, DiffusionTerm
 import math
 import time

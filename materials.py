@@ -1,10 +1,3 @@
-'''
-Created on 03.08.2017
-
-@author: muel_hd
-'''
-
-
 #===============================================================================
 # skeleton = {
 #     "lambda_x" : Waermeleitefaehigkeit in x-Richtung,

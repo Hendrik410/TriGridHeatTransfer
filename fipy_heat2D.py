@@ -1,11 +1,4 @@
-'''
-Created on 07.08.2017
-
-@author: muel_hd
-'''
-
-from fipy import *
-import numpy as np
+from fipy import CellVariable, Gmsh2D, DiffusionTerm, Viewer, Variable, TransientTerm
 import math
 
 from materials import Aluminum, SiC

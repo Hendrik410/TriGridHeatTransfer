@@ -1,9 +1,3 @@
-'''
-Created on 07.08.2017
-
-@author: muel_hd
-'''
-
 from fipy import CellVariable, FaceVariable, Gmsh2D, DiffusionTerm, Matplotlib2DViewer, MatplotlibVectorViewer
 import numpy as np
 import math

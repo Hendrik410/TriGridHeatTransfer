@@ -1,9 +1,3 @@
-'''
-Created on 25.07.2017
-
-@author: muel_hd
-'''
-
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider
 

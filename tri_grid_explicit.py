@@ -1,9 +1,3 @@
-'''
-Created on 02.08.2017
-
-@author: muel_hd
-'''
-
 import math
 from time import clock
 import numpy as np
