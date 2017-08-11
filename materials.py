@@ -7,12 +7,13 @@ Created on 03.08.2017
 
 #===============================================================================
 # skeleton = {
-#     "lambda_x": Waermeleitefaehigkeit in x-Richtung,
-#     "lambda_y": Waermeleitefaehigkeit in y-Richtung,
-#     "dichte"  : Dichte,
-#     "cp"      : Waermekapazitaet,
-#     "k_x"     : Permeabilitaet in x-Richtung,
-#     "k_y"     : Permeabilitaet in y-Richtung
+#     "lambda_x" : Waermeleitefaehigkeit in x-Richtung,
+#     "lambda_y" : Waermeleitefaehigkeit in y-Richtung,
+#     "dichte"   : Dichte,
+#     "cp"       : Waermekapazitaet,
+#     "k_x"      : Permeabilitaet in x-Richtung,
+#     "k_y"      : Permeabilitaet in y-Richtung,
+#     "viscosity": Voskositaet des Materials (Fluids)
 # }
 #===============================================================================
 
@@ -36,10 +37,11 @@ Aluminum = {
 }
 
 Nitrogen =  {
-    "lambda_x": 0.02583,
-    "lambda_y": 0.02583,
-    "dichte"  : 1.25,
-    "cp"      : 1040.0,
-    "k_x"     : 0.0,
-    "k_y"     : 0.0
+    "lambda_x" : 0.02583,
+    "lambda_y" : 0.02583,
+    "dichte"   : 1.25,
+    "cp"       : 1040.0,
+    "k_x"      : 0.0,
+    "k_y"      : 0.0,
+    "viscosity": 15.0
 }

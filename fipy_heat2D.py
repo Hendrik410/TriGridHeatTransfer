@@ -55,7 +55,8 @@ intervals = int(total_time / dt)
 Dx = material["lambda_x"] / (material["cp"] * material["dichte"])
 Dy = material["lambda_y"] / (material["cp"] * material["dichte"])
 
-D = Variable(value=((Dx,0), (0,Dy)))
+D = Variable(value=((Dx,0), 
+                    (0,Dy)))
 
 
 
@@ -78,7 +79,12 @@ Line(13) = {{4,5}};
 Line(14) = {{5,1}};
 
 Line Loop(15) = {{10,11,12,13,14}};
-Plane Surface(16) = {{15}};'''.format(
+Plane Surface(16) = {{15}};
+
+Physical Line("outer") = {{14}};
+Physical Line("inner") = {{11, 12}};
+Physical Surface("surface") = {{16}};
+'''.format(
     cellSize,
     l1,
     l2,
@@ -103,54 +109,9 @@ equation = TransientTerm() == DiffusionTerm(coeff=D)
 
 # boundry conditions ----------------------------------------------------------
 
-def face_has_angle_sin(faceId, sin):
-    return math.fabs(math.fabs(mesh.faceNormals[0,faceId]) - sin) < 0.001
 
-def face_has_angle(faceId, angle):
-    return face_has_angle_sin(faceId, math.sin(angle))
-
-def is_exterior_face(faceId):
-    return mesh.exteriorFaces[faceId]
-
-def get_face_coordinates(faceId):
-    return mesh.faceCenters.value[0, faceId], mesh.faceCenters.value[1, faceId]
-
-def is_above_line(faceId, slope, offset):
-    x,y = get_face_coordinates(faceId)
-    return (slope * x) + offset < y
-
-def is_below_line(faceId, slope, offset):
-    x,y = get_face_coordinates(faceId)
-    return (slope * x) + offset > y
-
-
-tan_alpha = math.tan(alpha)
-sin_alpha = math.sin(alpha)
-sin_beta = math.sin(beta)
-
-def is_upper_boundary(faceId):
-    return is_exterior_face(faceId) and \
-        face_has_angle_sin(faceId, sin_alpha) and \
-        is_above_line(faceId, tan_alpha, -cellSize * 2)
-
-def is_lower_boundary(faceId):
-    return is_exterior_face(faceId) and is_below_line(faceId, tan_alpha, -cellSize*2) and \
-        (face_has_angle_sin(faceId, sin_beta) or (face_has_angle(faceId, 0) and is_above_line(faceId, 0.0, 0.0)))
-
-
-
-outerEdge = np.ndarray((mesh.numberOfFaces), dtype=bool)
-innerEdge = np.ndarray((mesh.numberOfFaces), dtype=bool)
-
-for i in range(mesh.numberOfFaces):
-    outerEdge[i] = is_upper_boundary(i)
-    
-for i in range(mesh.numberOfFaces):
-    innerEdge[i] = is_lower_boundary(i)
-
-
-phi.constrain(Ti, innerEdge)
-phi.constrain(Te, outerEdge)
+phi.constrain(Ti, where=mesh.physicalFaces["inner"])
+phi.constrain(Te, where=mesh.physicalFaces["outer"])
 
 
 viewer = Viewer(vars=phi, datamin=0., datamax=Te*1.1)
