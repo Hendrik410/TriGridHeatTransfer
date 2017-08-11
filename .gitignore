@@ -1,4 +1,4 @@
 .project
 .pydevproject
-/materials.pyc
-/visualization.pyc
+
+*.pyc
