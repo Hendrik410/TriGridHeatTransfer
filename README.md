@@ -1,92 +1,92 @@
 # Unstructured Grid Simulations
 
 ## Einleitung
-Dieses Projekt enthält diverse Varianten von Simulationen von Wärmeleitung und Druckveränderungen in unstrukturierten Dreiecksgittern, sowohl in 2 als auch in 3 Dimensionen.
+Dieses Projekt enthÃ¤lt diverse Varianten von Simulationen von WÃ¤rmeleitung und DruckverÃ¤nderungen in unstrukturierten Dreiecksgittern, sowohl in 2 als auch in 3 Dimensionen.
 
 Die Dateien "visualization.py" und "materials.py" enthalten Methoden und Infoamtionen, die von allen Skripts genutzt werden.
-"tri\_grid\_explicit.py" ist der Versuch einer eigenen Implementierung von Wärmeleitung nach der Finiten Volumen Methode.
+"tri\_grid\_explicit.py" ist der Versuch einer eigenen Implementierung von WÃ¤rmeleitung nach der Finiten Volumen Methode.
 
-Alle Dateien die mit dem Prefix "fipy_" beginnen sind Implementierungen auf Basis der FiPy Libraries, einer Bibliothek zum Lösen und Visualisieren von PDEs und ODEs.
+Alle Dateien die mit dem Prefix "fipy_" beginnen sind Implementierungen auf Basis der FiPy Libraries, einer Bibliothek zum LÃ¶sen und Visualisieren von PDEs und ODEs.
 
 ## Gitter
-In allen Sktipten (bis auf "tri\_grid\_explicit.py") werden die Gitter mit einem Tool namens Gmsh erstellt (Verwendet wurde Version 3.0.4). Gmsh erstellt 2- und 3-Dimensionale Gitter aufgrund von Textbefehlen, die einzelne Geometrien definieren und verknüpfen.
-Zunächst werden die einzelnen Punkte der Geometrie definiert, dann werden diese Punkte mit Lineien verbunden und diese Linien werden dann zu einer Fläche verknüpft.
-In den dreidimensionalen Fällen wird diese Fläche dann noch durch eine Rotation um pi/2 extrudiert, um einen Volumenkörper zu erhalten.
+In allen Sktipten (bis auf "tri\_grid\_explicit.py") werden die Gitter mit einem Tool namens Gmsh erstellt (Verwendet wurde Version 3.0.4). Gmsh erstellt 2- und 3-Dimensionale Gitter aufgrund von Textbefehlen, die einzelne Geometrien definieren und verknÃ¼pfen.
+ZunÃ¤chst werden die einzelnen Punkte der Geometrie definiert, dann werden diese Punkte mit Lineien verbunden und diese Linien werden dann zu einer FlÃ¤che verknÃ¼pft.
+In den dreidimensionalen FÃ¤llen wird diese FlÃ¤che dann noch durch eine Rotation um pi/2 extrudiert, um einen VolumenkÃ¶rper zu erhalten.
 
-Um die Randbedingungen später im Programm festelegen zu können werden in Gmsh physikalische Kanten (oder Flächen) definiert und mit den Namen "inner" und "outer" identifiziert. Im code kann dann mit `mesh.physicalFaces["inner"]` oder `mesh.pyhsicalFaces["outer"]` auf die entsprechenden Flächen zugegriffen werden.
+Um die Randbedingungen spÃ¤ter im Programm festelegen zu kÃ¶nnen werden in Gmsh physikalische Kanten (oder FlÃ¤chen) definiert und mit den Namen "inner" und "outer" identifiziert. Im code kann dann mit `mesh.physicalFaces["inner"]` oder `mesh.pyhsicalFaces["outer"]` auf die entsprechenden FlÃ¤chen zugegriffen werden.
 
-Die Größe der Zellen wird an den Punkten festgelegt und im Code durch die Variable `cellSize` festgelegt. Diese gibt die Zellgröße in Metern an und gilt für das gesamte Gitter.
-Die Koordinaten der Punkte werden dynamisch aufgrund der Angaben über die Geometrie (Längen und Winkel) bestimmt und das Gitter dementsprechend generiert.
+Die GrÃ¶ÃŸe der Zellen wird an den Punkten festgelegt und im Code durch die Variable `cellSize` festgelegt. Diese gibt die ZellgrÃ¶ÃŸe in Metern an und gilt fÃ¼r das gesamte Gitter.
+Die Koordinaten der Punkte werden dynamisch aufgrund der Angaben Ã¼ber die Geometrie (LÃ¤ngen und Winkel) bestimmt und das Gitter dementsprechend generiert.
 
-Die Bedeutung der Längen `l1`, `l2` und `l3` und der Winkel `alpha` und `beta` ist folgender Sizze zu entnehmen:
+Die Bedeutung der LÃ¤ngen `l1`, `l2` und `l3` und der Winkel `alpha` und `beta` ist folgender Sizze zu entnehmen:
 ![alt text](images/dimensions.png "Dimensionen")
 
 
 ### Achtung
-Sind in Gmsh physikalische Kanten (oder Flächen) definiert, muss auch die Fläche (oder das Volumen) als physikalisch markiert werden, da sonst keine Zellen erstellt.
+Sind in Gmsh physikalische Kanten (oder FlÃ¤chen) definiert, muss auch die FlÃ¤che (oder das Volumen) als physikalisch markiert werden, da sonst keine Zellen erstellt.
 
 
 ## Randbedingungen
-Allen Flächen mit der Bezeichnung "inner" wird der Druck `Pres` oder die Temperatur `Ti` zugewiesen, während alle Flächen mit der Bezeichnung "outer" eine Randbedingung mit dem Druck `Pamb` oder der Temperatur `Te` zugewiesen werden. Alle übrigen Zellen werden mit dem Druck `P0`oder der Temperatur `T0` initialisiert.
+Allen FlÃ¤chen mit der Bezeichnung "inner" wird der Druck `Pres` oder die Temperatur `Ti` zugewiesen, wÃ¤hrend alle FlÃ¤chen mit der Bezeichnung "outer" eine Randbedingung mit dem Druck `Pamb` oder der Temperatur `Te` zugewiesen werden. Alle Ã¼brigen Zellen werden mit dem Druck `P0`oder der Temperatur `T0` initialisiert.
 
 Die derzeitige Implementierung erlaubt nur Dirichlet-Randbedingung.
 
-Ist für eine Fläche keine Randbedingung gegeben, wird kein Fluss (von Druck, Temperatur o.ä.) über diese Fläche angenommen.
+Ist fÃ¼r eine FlÃ¤che keine Randbedingung gegeben, wird kein Fluss (von Druck, Temperatur o.Ã¤.) Ã¼ber diese FlÃ¤che angenommen.
 
 ## Materialeigenschaften
-In der Datei "materials.py" sind mehrere Materialien als Python Dictionary definiert. Das Grundgerüst einer solchen Definietion befindet sich am Anfang der Datei.
-In den Skripts werden diese Materialien importiert und können der Variable `material` und bei Berechnungen für Druck auch noch der Variable `fluid` zugewiesen werden. 
-In den darauffolgenden Berechnungen werden dann die Werte für das Material der Probe oder des Fluids verwendet.
+In der Datei "materials.py" sind mehrere Materialien als Python Dictionary definiert. Das GrundgerÃ¼st einer solchen Definietion befindet sich am Anfang der Datei.
+In den Skripts werden diese Materialien importiert und kÃ¶nnen der Variable `material` und bei Berechnungen fÃ¼r Druck auch noch der Variable `fluid` zugewiesen werden. 
+In den darauffolgenden Berechnungen werden dann die Werte fÃ¼r das Material der Probe oder des Fluids verwendet.
 
 Die sauberste Methode neue Materialien zu verwenden, ist diese in "materials.py" zu definieren und dann aus den Skripts auf diese Definition zu referenzieren.
 
 ## Koeffizienten
-Da die Materialeigenschaften oft von der Richtung abhängig sind, werden sie in der Datei "materials.py" auch dementsprechend definiert. Um FiPy diese richtungsabhängigen Werte mitzuteilen, werden sie nicht als Skalar sondern als Tensor vom 2. Rang übergeben. 
+Da die Materialeigenschaften oft von der Richtung abhÃ¤ngig sind, werden sie in der Datei "materials.py" auch dementsprechend definiert. Um FiPy diese richtungsabhÃ¤ngigen Werte mitzuteilen, werden sie nicht als Skalar sondern als Tensor vom 2. Rang Ã¼bergeben. 
 
 ## Berechnungen
-In den Skripten kommen drei Arten von Berechnungen vor: Instationär, Stationär und Stationär mit Sweeps.
+In den Skripten kommen drei Arten von Berechnungen vor: InstationÃ¤r, StationÃ¤r und StationÃ¤r mit Sweeps.
 
-Instationäre Berechnungen kommen nur in der Datei "fipy\_heat2D.py" vor. Hier kann durch die Variable `steady_state` festgelegt werden, ob die Berechnung stationär oder instationär durchgeführt werden soll.
-Die dreidimensionle Berechnung der Temperatur ist aufgrund der fehlenden Möglichkeit der Visualisierung ebenfalls stationär.
+InstationÃ¤re Berechnungen kommen nur in der Datei "fipy\_heat2D.py" vor. Hier kann durch die Variable `steady_state` festgelegt werden, ob die Berechnung stationÃ¤r oder instationÃ¤r durchgefÃ¼hrt werden soll.
+Die dreidimensionle Berechnung der Temperatur ist aufgrund der fehlenden MÃ¶glichkeit der Visualisierung ebenfalls stationÃ¤r.
 
-Bei den Berechnungen zum Druck kommt die schwierigkeit hinzu, dass die Dichte des Fluids von dessen Druck abhängikeit. Es ist deshalb möglich, die Berechnungen mit Sweeps durchzuführen. Das bedeutet es werden einzelne Berechnungen stationär durchgeführt, bei denen immer der Druck der vorherigen Berechnung verwendet wird, um die Koeffizienten für den möchsten Durchlauf zu berechnen. Dadurch konvergiert das Ergebnis mit der Zeit zu der tatsächlichen Lösung. Versuche zeigen, dass sich die Ergebnisse nach dem 10 Sweep nicht mehr sichtlich unterscheiden.
-Es kann entweder eine feste Anzahl an Sweeps angegeben werden oder man modifiziert die Bedingung der Iteration derartig, dass sie zur benötigten Konvergenzbedingung passt.
+Bei den Berechnungen zum Druck kommt die schwierigkeit hinzu, dass die Dichte des Fluids von dessen Druck abhÃ¤ngikeit. Es ist deshalb mÃ¶glich, die Berechnungen mit Sweeps durchzufÃ¼hren. Das bedeutet es werden einzelne Berechnungen stationÃ¤r durchgefÃ¼hrt, bei denen immer der Druck der vorherigen Berechnung verwendet wird, um die Koeffizienten fÃ¼r den mÃ¶chsten Durchlauf zu berechnen. Dadurch konvergiert das Ergebnis mit der Zeit zu der tatsÃ¤chlichen LÃ¶sung. Versuche zeigen, dass sich die Ergebnisse nach dem 10 Sweep nicht mehr sichtlich unterscheiden.
+Es kann entweder eine feste Anzahl an Sweeps angegeben werden oder man modifiziert die Bedingung der Iteration derartig, dass sie zur benÃ¶tigten Konvergenzbedingung passt.
 
-Im Fall der zweidimensionalen Druckberechnung werden ebenfalls die Massenströme für jede Zelle berechnet, nachdem das Ergebnis konvergiert ist.
+Im Fall der zweidimensionalen Druckberechnung werden ebenfalls die MassenstrÃ¶me fÃ¼r jede Zelle berechnet, nachdem das Ergebnis konvergiert ist.
 
 ## Visualisierung
-FiPy selbst unterstützt mehrere Methoden der Visualisierung. Es bietet Anbindung an Matplotlib, Mayavi und diverse andere, allerdings werden nur diese beiden verwendet.
-Matplotlib ist für die Visualisierung aller zweidimensionalen Daten verantwortlich, während Mayavi die dreidimensionalen Ergebnisse visulaisiert.
+FiPy selbst unterstÃ¼tzt mehrere Methoden der Visualisierung. Es bietet Anbindung an Matplotlib, Mayavi und diverse andere, allerdings werden nur diese beiden verwendet.
+Matplotlib ist fÃ¼r die Visualisierung aller zweidimensionalen Daten verantwortlich, wÃ¤hrend Mayavi die dreidimensionalen Ergebnisse visulaisiert.
 
-Im Fall der zweidimensionalen Druckberechnung werden die berechneten Masseströme noch als Pfeile eingezeichnet.
+Im Fall der zweidimensionalen Druckberechnung werden die berechneten MassestrÃ¶me noch als Pfeile eingezeichnet.
 
-Da sich die Matplotlib Fenster immer sofort schließen, werden die Ergebnisse im Ordner "results" als PNG abgelegt und können dort im Nachhinein betrachtet werden.
+Da sich die Matplotlib Fenster immer sofort schlieÃŸen, werden die Ergebnisse im Ordner "results" als PNG abgelegt und kÃ¶nnen dort im Nachhinein betrachtet werden.
 
-Mayavi wurde über Anaconda in der Version 4.5.0 installiert.
+Mayavi wurde Ã¼ber Anaconda in der Version 4.5.0 installiert.
 
 
 ## Ergebnisse
 
-Druck mit 0.003m Zellgröße und 6 Sweeps
+Druck mit 0.003m ZellgrÃ¶ÃŸe und 6 Sweeps
 ![alt text](results/0.003_6.png "Graph")
 
-Druck mit 0.001m Zellgröße und 7 Sweeps und Massenströmen
+Druck mit 0.001m ZellgrÃ¶ÃŸe und 7 Sweeps und MassenstrÃ¶men
 ![alt text](results/0.001_7_2.0.png "Graph")
 
-Temperatur mit 0.0005m Zellgröße in 3D
+Temperatur mit 0.0005m ZellgrÃ¶ÃŸe in 3D
 ![alt text](results/3D_0.0005.png "Graph")
 
-## Zukünftige Arbeiten
+## ZukÃ¼nftige Arbeiten
 Die dreidimensionale Berechnung des Druckes konvergiert nicht zum Ergebnis, sonder divergiert. Hier muss der Fehler gefunden und behoben werden.
 
-Desweiteren ist bis jetzt keine Auswertung aus das Betrachten der Graphen möglich. Hier könnte eine Methode implementiert werden, die es erlaubt, die Werte der Lösungsvariable (`phi`) auszuwerten.
+Desweiteren ist bis jetzt keine Auswertung aus das Betrachten der Graphen mÃ¶glich. Hier kÃ¶nnte eine Methode implementiert werden, die es erlaubt, die Werte der LÃ¶sungsvariable (`phi`) auszuwerten.
 
-Aus der bisherigen Arbeit könnte ein allgemeines Tool zum Lösen von Differnzialgleichungen in beliebigen Meshes erstellt werden.
+Aus der bisherigen Arbeit kÃ¶nnte ein allgemeines Tool zum LÃ¶sen von Differnzialgleichungen in beliebigen Meshes erstellt werden.
 
-Die Zellgröße könnte Variabel gemacht werden, um eine hohe Auflösung nur dort einzusetzten wo man sie braucht, während das testliche Mesh eher grob ist.
+Die ZellgrÃ¶ÃŸe kÃ¶nnte Variabel gemacht werden, um eine hohe AuflÃ¶sung nur dort einzusetzten wo man sie braucht, wÃ¤hrend das restliche Mesh eher grob ist.
 
 ## Links
-Unter den folgenden Links lassen sich zusätzliche Informationen zu den entsprechenden Themen finden.
+Unter den folgenden Links lassen sich zusÃ¤tzliche Informationen zu den entsprechenden Themen finden.
 
 [FiPy Home](https://www.ctcms.nist.gov/fipy/index.html)
 
